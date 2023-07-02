@@ -1,0 +1,84 @@
+<!-- (Start HTML Quadro\UmlDoc\MermaidDiagram) -->
+<html lang="en">
+  <head>
+    <title>ClassDiagram Quadro\Logging\</title>
+    <meta charset="utf-8" />
+    <style>
+        body{
+            margin:20px; color:#cccccc;
+            background: rgb(52,20,20);
+            background: linear-gradient(90deg, rgba(52,20,20,1) 12%, rgba(13,6,6,1) 52%, rgba(52,19,19,1) 90%);
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Quadro\Logging\</h1>
+    <p>Generated @ 20230619 13:50:50</p>
+
+<div class="mermaid">
+%%{init: {'theme':'dark'}}%%
+classDiagram
+    class Volta_Component_Logging_ConsoleLogger {
+        +alert(Stringable|string message, array context=[]):void
+        +critical(Stringable|string message, array context=[]):void
+        +debug(Stringable|string message, array context=[]):void
+        +emergency(Stringable|string message, array context=[]):void
+        +error(Stringable|string message, array context=[]):void
+        +info(Stringable|string message, array context=[]):void
+        +log( level, Stringable|string message, array context=[]):void
+        +notice(Stringable|string message, array context=[]):void
+        +warning(Stringable|string message, array context=[]):void
+    }
+    class Psr_Log_LoggerInterface {
+         	&lt;&lt;interface&gt;&gt;
+    }
+    Psr_Log_LoggerInterface..|>Volta_Component_Logging_ConsoleLogger
+    Volta_Component_Logging_ConsoleLogger..>Psr_Log_LoggerTrait
+    class Volta_Component_Logging_Exception
+    Exception<|--Volta_Component_Logging_Exception
+    class Exception
+    class Stringable {
+         	&lt;&lt;interface&gt;&gt;
+    }
+    class Throwable {
+         	&lt;&lt;interface&gt;&gt;
+    }
+    Stringable..|>Throwable
+    Throwable..|>Exception
+    class Volta_Component_Logging_FileLogger {
+        +__construct(string path, bool create=true)
+        +__destruct()
+        +alert(Stringable|string message, array context=[]):void
+        +critical(Stringable|string message, array context=[]):void
+        +debug(Stringable|string message, array context=[]):void
+        +emergency(Stringable|string message, array context=[]):void
+        +error(Stringable|string message, array context=[]):void
+        +info(Stringable|string message, array context=[]):void
+        +log( level, Stringable|string message, array context=[]):void
+        +notice(Stringable|string message, array context=[]):void
+        +warning(Stringable|string message, array context=[]):void
+    }
+    Psr_Log_LoggerInterface..|>Volta_Component_Logging_FileLogger
+    Volta_Component_Logging_FileLogger..>Psr_Log_LoggerTrait
+    class Volta_Component_Logging_PassthroughLogger {
+        +__construct(mixed callback)
+        +alert(Stringable|string message, array context=[]):void
+        +critical(Stringable|string message, array context=[]):void
+        +debug(Stringable|string message, array context=[]):void
+        +emergency(Stringable|string message, array context=[]):void
+        +error(Stringable|string message, array context=[]):void
+        +info(Stringable|string message, array context=[]):void
+        +log( level, Stringable|string message, array context=[]):void
+        +notice(Stringable|string message, array context=[]):void
+        +warning(Stringable|string message, array context=[]):void
+    }
+    Psr_Log_LoggerInterface..|>Volta_Component_Logging_PassthroughLogger
+    Volta_Component_Logging_PassthroughLogger..>Psr_Log_LoggerTrait
+</div>
+    <script type="module">
+         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+         mermaid.initialize({ startOnLoad: true });
+    </script>
+  </body>
+</html>
+<!-- (End HTML Quadro\UmlDoc\MermaidDiagram) -->
