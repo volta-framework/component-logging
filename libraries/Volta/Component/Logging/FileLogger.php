@@ -19,6 +19,10 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
 
+/**
+ * The File logger will append the log entries to a file. The file is set when the Log is instantiated. An exception is
+ * thrown when the file is invalid.
+ */
 class FileLogger implements LoggerInterface
 {
     use LoggerTrait;
@@ -26,40 +30,47 @@ class FileLogger implements LoggerInterface
     private mixed $_fileHandler;
 
     /**
-     * @param string $path
+     * @param string $filePath
      * @param bool $create
      * @throws Exception
      */
-    public function __construct(string $path, bool $create = true)
+    public function __construct(string $filePath, bool $create = true)
     {
-        $dir = dirname($path);
-        $file = basename($path);
+        $dir = dirname($filePath);
+        $file = basename($filePath);
+
+        if($create) {
+           if (!is_dir($dir)) mkdir($dir,0777, true);
+           if (!is_file($dir . DIRECTORY_SEPARATOR . $file)) {
+               touch($dir . DIRECTORY_SEPARATOR . $file);
+           }
+        }
         $realDir = realpath($dir);
 
         if (false === $realDir)
             throw new InvalidArgumentException(sprintf('Path is invalid, directory "%s" does not exists', $dir));
 
-        $realPath = realpath($path);
+        $realPath = realpath($filePath);
 
         if (false !== $realPath && is_dir($realPath))
             throw new InvalidArgumentException(sprintf('Path "%s" must be a file, directory given', $realPath));
 
-        // Somehow I come in the situation that realpath() returns the requested file and file_exists() returns false.
-        // Probably some caching issue. I could not resolve this. So to be sure I added the file_exists() to
-        // the if condition in order to add correct logging information. Because we add the mode 'a', it wil not result in an error
+        // Somehow, I come in the situation that realpath() returns the requested file and file_exists() returns false.
+        // Probably some caching issue. I could not resolve this. So to be sure, I added the file_exists() to
+        // the if condition in order to add correct logging information. Because we add the mode 'a', it will not result in an error
         // as the file will still be created butt now at least the logging entry will not be accurate.
         if (false === $realPath || !file_exists($realPath)) {
             if (!$create)
-                throw new InvalidArgumentException(sprintf('Path "%s" does not exists', $path));
+                throw new InvalidArgumentException(sprintf('%s : Path "%s" does not exists', __METHOD__, $filePath));
 
             if (!is_writable($realDir))
-                throw new InvalidArgumentException(sprintf('Cannot create log file "%s" directory "%s" is not writable', $file, $realDir));
+                throw new InvalidArgumentException(sprintf('%s : Cannot create log file "%s" directory "%s" is not writable',__METHOD__,  $file, $realDir));
 
             $realPath = $realDir . DIRECTORY_SEPARATOR . $file;
             $this->_fileHandler = fopen($realPath, 'a');
 
             if(false === $this->_fileHandler)
-                throw new Exception (sprintf('Cannot create log file, failed to open or create "%s"', $realPath));
+                throw new Exception (sprintf('%s : Cannot create log file, failed to open or create "%s"', __METHOD__, $realPath));
 
             $this->log(LogLevel::INFO, '-- Log file created --', [
                 'path' => $realPath,
@@ -73,7 +84,7 @@ class FileLogger implements LoggerInterface
             $this->_fileHandler = fopen($realPath, 'a');
 
             if(false === $this->_fileHandler)
-                throw new Exception (sprintf('Cannot create log file, failed to open or create "%s"', $realPath));
+                throw new Exception (sprintf('%s : Cannot create log file, failed to open or create "%s"', __METHOD__, $realPath));
 
             $this->log(LogLevel::INFO, '-- Log file opened --');
         }
@@ -99,11 +110,11 @@ class FileLogger implements LoggerInterface
         $timestamp = $date->format('Y-m-d h:i:s.u' );
         //$timestamp = date('Y-m-d h:i:s.u', time());
         if (false === fwrite($this->_fileHandler, sprintf("[%s] %-10s %s\n", $timestamp, strtoupper($level), $message)))
-            throw new Exception('Writing to log failed unexpectedly');
+            throw new Exception(__METHOD__ . ': Writing to log failed unexpectedly');
 
         if (count($context)) {
             if (false === fwrite($this->_fileHandler, print_r($context,true) . "\n"))
-                throw new Exception('Writing to log failed unexpectedly');
+                throw new Exception(__METHOD__ . ': Writing to log failed unexpectedly');
         }
 
     }
@@ -116,4 +127,5 @@ class FileLogger implements LoggerInterface
         $this->log(LogLevel::INFO, '-- Log file closed --');
         fclose($this->_fileHandler);
     }
+
 }

@@ -20,7 +20,7 @@ use Psr\Log\LoggerTrait;
 /**
  * This Logger will pass the log entry to the given callback
  */
-class PassthroughLogger implements LoggerInterface
+class PassThroughLogger implements LoggerInterface
 {
     use LoggerTrait;
 
@@ -31,12 +31,12 @@ class PassthroughLogger implements LoggerInterface
     private mixed $_callback;
 
     /**
-     * @param mixed $callback Callback to receive the  log entry
+     * @param mixed $callback Callback to receive the log entry
      */
     public function __construct(mixed $callback)
     {
         if (!is_callable($callback))
-            throw new InvalidArgumentException('Not a valid callback');
+            throw new InvalidArgumentException(__METHOD__ . ' : Not a valid callback');
 
         $this->_callback = $callback;
     }

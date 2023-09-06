@@ -19,7 +19,7 @@
     },
 
     "autoload": {
-        "psr-4": { "Volta\\Component\\Logging\\": "src/Volta/Component/Logging/" }
+        "psr-4": { "Volta\\Component\\Logging\\": "libraries/Volta/Component/Logging/"}
     }
 
 

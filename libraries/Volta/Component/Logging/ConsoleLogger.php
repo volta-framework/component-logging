@@ -20,8 +20,8 @@ use Psr\Log\LogLevel;
 
 /**
  * The Console logger will send the log entries to the console if available. This means if STDOUT is available of
- * when we are running the PHP build in webserver. In the latter case we send the log entry to the error_log which
- * is printed to the console. In all other cases the entry is ignored
+ * when we are running the PHP build in webserver. In the latter case, we send the log entry to the error_log which
+ * is printed to the console. In all other cases, the entry is ignored
  */
 class ConsoleLogger implements LoggerInterface
 {
@@ -51,11 +51,12 @@ class ConsoleLogger implements LoggerInterface
 
         $formatContext = "\e[3m\e[90m context: " . print_r($context, true) . "\e[0m";
         if(defined('STDOUT')) {
-            // if we are on the command line the constant STDOUT is defined
-            // but a timestamp is not provided as this is done with an entry adding
-            // to the error log. Hence, add the timestamp
-
-            /**
+            /*
+             * If we are on the command line, the constant STDOUT is defined
+             * but a timestamp is not provided as this is done with an entry adding
+             * to the error log.
+             * Therefore, add the timestamp manually.
+             *
              * @see https://www.php.net/manual/en/datetime.format.php
              */
             $date = new DateTime();
@@ -67,17 +68,16 @@ class ConsoleLogger implements LoggerInterface
             }
 
         } elseif(php_sapi_name() === "cli-server") {
-            // if not on the command line but in cli modes we add to the error log and
-            // this will be printed to the console
+            /*
+             * If not on the command line but in cli modes we add to the error log and
+             * this will be printed to the console
+             */
             error_log($formattedMessage);
             if(count($context)) {
                 error_log("\n" . $formatContext . "\n");
             }
         }
-        else{
-            // we send the log entry to dev null  ...
-            //echo str_pad(strtoupper($level), 10) . ' ' . $message . "\n";
-        }
+        /* else{ // send the log entry to dev-null ... } */
 
     }
 
