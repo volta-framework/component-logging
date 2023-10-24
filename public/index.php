@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/**
+/*
  * Sent plain text in case of executing this script in the browser.
  */
 @header('Content-Type: text/plain');
 
-/**
+/*
  * Examples of the loggers available in this component.
  * This script can be run in the console or in the browser with the PHP build in server:
  *
@@ -24,7 +24,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 try {
 
-    /**
+    /*
      * create an array of available loggers
      */
     $logs = [
@@ -36,7 +36,7 @@ try {
         new Volta\Component\Logging\FileLogger(__DIR__ . '/../__log/example.log')
     ];
 
-    /**
+    /*
      * and add entries for each level
      */
     foreach($logs as $log) {
@@ -49,15 +49,17 @@ try {
         $log->info('This is an info entry');
         $log->notice('This is a notice entry');
         $log->warning('This is a warning entry');
+        $log->log('CUSTOM', 'This is a custom entry');
         unset($log);
     }
+    unset($logs); // calls the destruct on the file logger and releases the file resource
 
-    /**
+    /*
      * Show the content of the log file
      */
     echo "\n", file_get_contents(__DIR__ . '/../__log/example.log');
 
-/**
+/*
  * Catch Exceptions
  */
 } catch (\Volta\Component\Logging\Exception $e) {

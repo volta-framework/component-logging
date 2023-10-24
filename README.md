@@ -1,3 +1,10 @@
+# Volta Component Logging
+
+Component used for logging information.
+
+The component is based on the Psr\Log Interfaces. For more information about these interfaces see https://www.php-fig.org/psr/psr-3/.
+
+
 [//]: # (Start Quadro\UmlDoc\MermaidDiagram)
 ```mermaid
 classDiagram
