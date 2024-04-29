@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Volta\Component\Logging;
 
 use DateTime;
+use Psr\Log\InvalidArgumentException;
 use Stringable;
 
 use Volta\Component\Logging\EnumLogLevels as LogLevel;
@@ -23,6 +24,11 @@ use Volta\Component\Logging\EnumLogLevels as LogLevel;
  */
 class ConsoleLogger extends BaseLogger
 {
+
+    public function __construct(array $levels = [])
+    {
+        $this->setLevels($levels);
+    }
 
     /**
      * The log entries are made colorfully before send to the console.

@@ -50,8 +50,7 @@ class PassThroughLogger extends BaseLogger
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
-        if (!$this->hasLevel($level)) return;
-
+        if (!$this->hasLevel($level)) return; 
         call_user_func($this->_callback, $level, $message, $context);
     }
 }
