@@ -20,9 +20,8 @@ use Psr\Log\LoggerTrait;
 /**
  * This Logger will pass the log entry to the given callback
  */
-class PassThroughLogger implements LoggerInterface
+class PassThroughLogger extends BaseLogger
 {
-    use LoggerTrait;
 
     /**
      * @ignore Do not show in generated documentation
@@ -51,6 +50,8 @@ class PassThroughLogger implements LoggerInterface
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
+        if (!$this->hasLevel($level)) return;
+
         call_user_func($this->_callback, $level, $message, $context);
     }
 }

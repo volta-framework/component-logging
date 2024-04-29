@@ -14,18 +14,15 @@ namespace Volta\Component\Logging;
 use DateTime;
 use Stringable;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
-use Psr\Log\LogLevel;
+use Volta\Component\Logging\EnumLogLevels as LogLevel;
 
 /**
  * The Console logger will send the log entries to the console if available. This means if STDOUT is available of
  * when we are running the PHP build in webserver. In the latter case, we send the log entry to the error_log which
  * is printed to the console. In all other cases, the entry is ignored
  */
-class ConsoleLogger implements LoggerInterface
+class ConsoleLogger extends BaseLogger
 {
-    use LoggerTrait;
 
     /**
      * The log entries are made colorfully before send to the console.
@@ -37,15 +34,18 @@ class ConsoleLogger implements LoggerInterface
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
+        if (!$this->hasLevel($level)) return;
+
         $formattedMessage = match (strtolower($level)) {
-            LogLevel::EMERGENCY => "\e[93m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[33m $message \e[0m",
-            LogLevel::ALERT => "\e[93m" . str_pad(strtoupper($level), 10) . "\e[33m $message \e[0m",
-            LogLevel::CRITICAL => "\e[93m\e[4m" . str_pad(strtoupper($level), 10) . "\e[0m\e[33m $message \e[0m",
-            LogLevel::ERROR => "\e[91m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[31m $message \e[0m",
-            LogLevel::WARNING => "\e[95m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[35m $message \e[0m",
-            LogLevel::NOTICE => "\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m $message",
-            LogLevel::DEBUG => "\e[92m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[32m $message \e[0m",
-            LogLevel::INFO => "\e[94m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[34m $message \e[0m",
+            LogLevel::EMERGENCY->value => "\e[93m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[33m $message \e[0m",
+            LogLevel::ALERT->value => "\e[93m" . str_pad(strtoupper($level), 10) . "\e[33m $message \e[0m",
+            LogLevel::CRITICAL->value => "\e[93m\e[4m" . str_pad(strtoupper($level), 10) . "\e[0m\e[33m $message \e[0m",
+            LogLevel::ERROR->value => "\e[91m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[31m $message \e[0m",
+            LogLevel::WARNING->value => "\e[95m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[35m $message \e[0m",
+            LogLevel::NOTICE->value => "\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m $message",
+            LogLevel::DEBUG->value => "\e[92m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[32m $message \e[0m",
+            LogLevel::INFO->value => "\e[94m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[34m $message \e[0m",
+            LogLevel::SQL->value => "\e[95m\e[1m" . str_pad(strtoupper($level), 10) . "\e[0m\e[34m $message \e[0m",
             default => str_pad(strtoupper($level), 10) . ' ' . $message,
         };
 

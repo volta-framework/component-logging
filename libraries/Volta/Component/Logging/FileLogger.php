@@ -23,9 +23,8 @@ use Psr\Log\LogLevel;
  * The File logger will append the log entries to a file. The file is set when the Log is instantiated. An exception is
  * thrown when the file is invalid.
  */
-class FileLogger implements LoggerInterface
+class FileLogger extends BaseLogger
 {
-    use LoggerTrait;
 
     private mixed $_fileHandler;
 
@@ -100,6 +99,8 @@ class FileLogger implements LoggerInterface
      */
     public function log($level, Stringable|string $message, array $context = []): void
     {
+        if (!$this->hasLevel($level)) return;
+
         /**
          * @see https://www.php.net/manual/en/datetime.format.php
          *
