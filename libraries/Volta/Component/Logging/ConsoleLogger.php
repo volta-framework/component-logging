@@ -25,6 +25,9 @@ use Volta\Component\Logging\EnumLogLevels as LogLevel;
 class ConsoleLogger extends BaseLogger
 {
 
+    /**
+     * @param array $levels List with levels to be included for logging
+     */
     public function __construct(array $levels = [])
     {
         $this->setLevels($levels);

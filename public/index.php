@@ -50,6 +50,7 @@ try {
         $log->notice('This is a notice entry');
         $log->warning('This is a warning entry');
         $log->log('CUSTOM', 'This is a custom entry');
+        $log->log('SQL', 'This is a SQl entry');
         unset($log);
     }
     unset($logs); // calls the destruct on the file logger and releases the file resource

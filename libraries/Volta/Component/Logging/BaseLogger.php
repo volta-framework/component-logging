@@ -13,7 +13,6 @@ namespace Volta\Component\Logging;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
-use Psr\Log\LogLevel;
 
 abstract class BaseLogger implements LoggerInterface
 {
@@ -27,7 +26,7 @@ abstract class BaseLogger implements LoggerInterface
     protected array $_levels = [];
 
     /**
-     * Set the levels to be logged. Levels are case insensitive.
+     * Set the levels to be logged. Levels are case-insensitive.
      * @param array $levels
      * @return $this
      */
@@ -38,7 +37,7 @@ abstract class BaseLogger implements LoggerInterface
     }
 
     /**
-     * Retuns the levels to be logged
+     * Returns the levels to be logged
      * @return array
      */
     public function getLevels(): array
@@ -47,14 +46,14 @@ abstract class BaseLogger implements LoggerInterface
     }
 
     /**
-     * Returns true when the level __$level__ is to belogged. False otherwise
+     * Returns true when the level __$level__ is to be logged. False otherwise
      * @param string $level
      * @return bool
      */
     public function hasLevel(string $level): bool
     {
         if (count($this->_levels) === 0) return true;
-        return in_array(strtolower($level), $this->_levels, );
+        return in_array(strtolower($level), $this->_levels);
     }
 
 
